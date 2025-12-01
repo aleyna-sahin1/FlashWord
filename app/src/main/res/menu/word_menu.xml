@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_add_word"
+        android:title="Add New Flashcard"
+        >
+
+    </item>
+
+    <item
+        android:id="@+id/item_word_list"
+        android:title="My Flashcards"
+        >
+
+    </item>
+
+
+</menu>
