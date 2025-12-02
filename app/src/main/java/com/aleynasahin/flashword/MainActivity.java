@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Word> wordArrayList;
     WordAdapter adapter;
 
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        wordArrayList=new ArrayList<>();
-        adapter=new WordAdapter(wordArrayList);
+        wordArrayList = new ArrayList<>();
+        adapter = new WordAdapter(wordArrayList);
 
         // Activity veya Fragment içinde
         binding.cardFront.setOnClickListener(v -> {
@@ -67,7 +71,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         showRandomWord();
-
+        PressAnimListener listener = new PressAnimListener(this); // this = Activity context
+        binding.btnNext.setOnTouchListener(listener);
+        binding.btnCheck.setOnTouchListener(listener);
     }
     public void check(View view) {
 
@@ -75,14 +81,14 @@ public class MainActivity extends AppCompatActivity {
         String correctAnswer = binding.meaningTextView.getText().toString().trim();
         if (userAnswer.equals(correctAnswer)) {
             Toast.makeText(this, "Correct!", Toast.LENGTH_LONG).show();
-        }else {
+        } else {
             Toast.makeText(this, "Wrong!", Toast.LENGTH_LONG).show();
         }
 
     }
     private void showRandomWord() {
-        try{
-            SQLiteDatabase database=this.openOrCreateDatabase("Words",MODE_PRIVATE,null);
+        try {
+            SQLiteDatabase database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
             database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR)");
             Cursor cursor = database.rawQuery(
                     "SELECT word, meaning FROM words ORDER BY RANDOM() LIMIT 1", null);
@@ -107,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
     }
-    public void nextWord(View view){
+    public void nextWord(View view) {
         showRandomWord();
     }
 
@@ -124,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if(item.getItemId()==R.id.item_add_word){
+        if (item.getItemId() == R.id.item_add_word) {
             Intent intent = new Intent(this, WordActivity.class);
             startActivity(intent);
-        }else if (item.getItemId()==R.id.item_word_list){
+        } else if (item.getItemId() == R.id.item_word_list) {
             Intent intent = new Intent(this, WordList.class);
             startActivity(intent);
         }

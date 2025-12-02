@@ -51,6 +51,8 @@ public class WordActivity extends AppCompatActivity {
         });
         database=this.openOrCreateDatabase("Words",MODE_PRIVATE,null);
         database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR)");
+        PressAnimListener listener = new PressAnimListener(this); // this = Activity context
+        binding.btnSave.setOnTouchListener(listener);
 
     }
 
