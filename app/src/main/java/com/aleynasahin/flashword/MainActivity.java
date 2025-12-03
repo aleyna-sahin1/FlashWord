@@ -53,10 +53,8 @@ public class MainActivity extends AppCompatActivity {
         });
         wordArrayList = new ArrayList<>();
         adapter = new WordAdapter(wordArrayList);
-
-        // Activity veya Fragment içinde
         binding.cardFront.setOnClickListener(v -> {
-            flipCard(); // Kartı çevirme animasyonunu başlat kart arkaya döndüğü zaman burası çalışır.
+            flipCard();
             binding.btnNext.setVisibility(View.INVISIBLE);
             binding.btnCheck.setVisibility(View.INVISIBLE);
             binding.editTextAnswer.setVisibility(View.INVISIBLE);
@@ -72,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
         showRandomWord();
         PressAnimListener listener = new PressAnimListener(this); // this = Activity context
-        binding.btnNext.setOnTouchListener(listener);
-        binding.btnCheck.setOnTouchListener(listener);
+        binding.btnNext.setOnTouchListener(new PressAnimListener(this));
+        binding.btnCheck.setOnTouchListener(new PressAnimListener(this));
     }
     public void check(View view) {
 
