@@ -60,6 +60,12 @@ public class WordActivity extends AppCompatActivity {
         String word=binding.editTextAddWord.getText().toString().trim();
         String meaning=binding.editTextAddMeaning.getText().toString().trim();
 
+        if (word.isEmpty()) {
+            binding.editTextAddWord.setError("Please enter a word");
+            return;
+        }
+
+
         try{
             String sql="INSERT INTO words (word,meaning) VALUES (?,?)";
             SQLiteStatement statement=database.compileStatement(sql);
