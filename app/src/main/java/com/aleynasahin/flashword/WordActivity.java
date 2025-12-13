@@ -64,6 +64,10 @@ public class WordActivity extends AppCompatActivity {
             binding.editTextAddWord.setError("Please enter a word");
             return;
         }
+        if (meaning.isEmpty()) {
+            binding.editTextAddMeaning.setError("Please enter a meaning");
+            return;
+        }
 
 
         try{
