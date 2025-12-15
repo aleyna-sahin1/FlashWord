@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void nextWord(View view) {
         showRandomWord();
+        binding.editTextAnswer.setText("");
     }
 
 
