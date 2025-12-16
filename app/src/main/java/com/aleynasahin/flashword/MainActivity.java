@@ -150,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.item_word_list) {
             Intent intent = new Intent(this, WordList.class);
             startActivity(intent);
+        }else if (item.getItemId() == R.id.item_statistics) {
+            startActivity(new Intent(this, StatisticsActivity.class));
         }
 
 

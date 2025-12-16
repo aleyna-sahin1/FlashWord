@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlashWord">
         <activity
+            android:name=".StatisticsActivity"
+            android:exported="false" />
+        <activity
             android:name=".WordList"
             android:exported="false" />
         <activity
