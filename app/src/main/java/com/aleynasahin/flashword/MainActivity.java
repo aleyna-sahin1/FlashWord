@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFrontVisible = true;
     ArrayList<Word> wordArrayList;
     WordAdapter adapter;
+    SQLiteDatabase database;
+    int currentWordId;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
+        database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR,correct_count INTEGER DEFAULT 0,wrong_count INTEGER DEFAULT 0)");
         wordArrayList = new ArrayList<>();
         adapter = new WordAdapter(wordArrayList);
         binding.cardFront.setOnClickListener(v -> {
@@ -78,30 +82,41 @@ public class MainActivity extends AppCompatActivity {
         String userAnswer = binding.editTextAnswer.getText().toString().trim();
         String correctAnswer = binding.meaningTextView.getText().toString().trim();
         if (userAnswer.equals(correctAnswer)) {
+
             Toast.makeText(this, "Correct!", Toast.LENGTH_LONG).show();
+
+            database.execSQL("UPDATE words SET correct_count = correct_count + 1 WHERE id = ?",
+                    new Object[]{ currentWordId }
+            );
+
         } else {
             Toast.makeText(this, "Wrong!", Toast.LENGTH_LONG).show();
+
+            database.execSQL(
+                    "UPDATE words SET wrong_count = wrong_count + 1 WHERE id = ?",
+                    new Object[]{ currentWordId }
+            );
         }
 
     }
     private void showRandomWord() {
         try {
-            SQLiteDatabase database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
-            database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR)");
-            Cursor cursor = database.rawQuery(
-                    "SELECT word, meaning FROM words ORDER BY RANDOM() LIMIT 1", null);
+            Cursor cursor = database.rawQuery("SELECT id,word, meaning FROM words ORDER BY RANDOM() LIMIT 1", null);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
+                    int idIdx = cursor.getColumnIndex("id");
                     int wordIdx = cursor.getColumnIndex("word");
                     int meaningIdx = cursor.getColumnIndex("meaning");
 
-                    if (wordIdx != -1 && meaningIdx != -1) {
+                    if (idIdx != -1 && wordIdx != -1 && meaningIdx != -1) {
+                        currentWordId = cursor.getInt(idIdx);
                         String word = cursor.getString(wordIdx);
                         String meaning = cursor.getString(meaningIdx);
 
                         binding.wordTextView.setText(word);
                         binding.meaningTextView.setText(meaning);
+
                     }
                 }
                 cursor.close();
