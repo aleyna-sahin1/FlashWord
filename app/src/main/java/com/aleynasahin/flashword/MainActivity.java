@@ -1,5 +1,6 @@
 package com.aleynasahin.flashword;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
@@ -37,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     WordAdapter adapter;
     SQLiteDatabase database;
     int currentWordId;
+    int lastWordId = -1;
+    int wrongTryCount = 0;
+    boolean wrongCountWritten = false;
+
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -59,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
         adapter = new WordAdapter(wordArrayList);
         binding.cardFront.setOnClickListener(v -> {
             flipCard();
-            binding.btnNext.setVisibility(View.INVISIBLE);
             binding.btnCheck.setVisibility(View.INVISIBLE);
+            binding.btnNext.setVisibility(View.INVISIBLE);
             binding.editTextAnswer.setVisibility(View.INVISIBLE);
         });
 
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             binding.btnNext.setVisibility(View.VISIBLE);
             binding.btnCheck.setVisibility(View.VISIBLE);
             binding.editTextAnswer.setVisibility(View.VISIBLE);
-            // Kartı çevirme animasyonunu başlat
+
         });
 
         showRandomWord();
@@ -92,25 +97,55 @@ public class MainActivity extends AppCompatActivity {
             database.execSQL("UPDATE words SET correct_count = correct_count + 1 WHERE id = ?",
                     new Object[]{ currentWordId }
             );
-            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-                nextWord(null);
-            }, 0);
+
+            // Kartın zıplama / scale animasyonu
+            binding.cardFront.animate()
+                    .scaleX(1.1f)
+                    .scaleY(1.1f)
+                    .setDuration(150)
+                    .withEndAction(() -> {
+                        binding.cardFront.animate()
+                                .scaleX(1f)
+                                .scaleY(1f)
+                                .setDuration(150)
+                                .withEndAction(() -> {
+                                    nextWord(null);        // Sadece burada kelime değişecek
+
+                                })
+                                .start();
+                    })
+                    .start();
+
 
         } else {
+            wrongTryCount++;
             Toast.makeText(this, "Wrong!", Toast.LENGTH_LONG).show();
 
-            database.execSQL(
-                    "UPDATE words SET wrong_count = wrong_count + 1 WHERE id = ?",
-                    new Object[]{ currentWordId }
-            );
+            // ❗ sadece ilk yanlışta DB'ye yaz
+            if (!wrongCountWritten) {
+                database.execSQL(
+                        "UPDATE words SET wrong_count = wrong_count + 1 WHERE id = ?",
+                        new Object[]{ currentWordId }
+                );
+                wrongCountWritten = true;
+            }
+
+            shakeCard();
+
+
         }
-        binding.btnCheck.setEnabled(false);
+        binding.editTextAnswer.setText("");
 
     }
     private void showRandomWord() {
+        // 🔴 KELİME DEĞİŞTİ = STATE RESET
+        wrongTryCount = 0;
+        wrongCountWritten = false;
         try {
-            Cursor cursor = database.rawQuery("SELECT id,word, meaning FROM words ORDER BY RANDOM() LIMIT 1", null);
-
+            Cursor cursor = database.rawQuery(
+                    "SELECT id, word, meaning FROM words WHERE id != ? ORDER BY RANDOM() LIMIT 1",
+                    new String[]{ String.valueOf(lastWordId) }
+            );
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     int idIdx = cursor.getColumnIndex("id");
@@ -119,12 +154,21 @@ public class MainActivity extends AppCompatActivity {
 
                     if (idIdx != -1 && wordIdx != -1 && meaningIdx != -1) {
                         currentWordId = cursor.getInt(idIdx);
+                        lastWordId = currentWordId;
+
                         String word = cursor.getString(wordIdx);
                         String meaning = cursor.getString(meaningIdx);
 
                         binding.wordTextView.setText(word);
                         binding.meaningTextView.setText(meaning);
 
+                    }
+                    if (cursor == null || !cursor.moveToFirst()) {
+                        cursor = database.rawQuery(
+                                "SELECT id, word, meaning FROM words ORDER BY RANDOM() LIMIT 1",
+                                null
+                        );
+                        cursor.moveToFirst();
                     }
                 }
                 cursor.close();
@@ -183,6 +227,28 @@ public class MainActivity extends AppCompatActivity {
             hiddenView.setRotationY(-90);
             hiddenView.animate().rotationY(0).setDuration(200).start();
         }).start();
+    }
+
+    private void shakeCard() {
+        // rotation: daha küçük açılar, daha fazla adım, daha smooth
+        ObjectAnimator animatorFront = ObjectAnimator.ofFloat(
+                binding.cardFront,
+                "rotation",
+                0f, -10f, 8f, -6f, 4f, -2f, 2f, 0f
+        );
+        animatorFront.setDuration(800); // tam ortası: ne hızlı ne yavaş
+        animatorFront.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+        animatorFront.start();
+
+        //Arka yuzu de aynı şekilde açılıyor
+        ObjectAnimator animatorBack = ObjectAnimator.ofFloat(
+                binding.cardBack,
+                "rotation",
+                0f, -10f, 8f, -6f, 4f, -2f, 2f, 0f
+        );
+        animatorBack.setDuration(800);
+        animatorBack.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+        animatorBack.start();
     }
 
 }

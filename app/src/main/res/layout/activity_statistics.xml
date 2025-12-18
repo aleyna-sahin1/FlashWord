@@ -116,6 +116,21 @@
             android:textStyle="bold"
             android:layout_gravity="center"
             android:paddingTop="8dp" />
+        <TextView
+            android:id="@+id/tvHardWordsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hard Words"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingTop="24dp" />
+
+        <TextView
+            android:id="@+id/tvHardWords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="loading..."
+            android:paddingTop="8dp" />
 
     </LinearLayout>
 

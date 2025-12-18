@@ -16,7 +16,7 @@
         android:layout_width="400dp"
         android:layout_height="300dp"
         android:layout_gravity="center"
-        android:background="#FFD700"
+        android:background="#FF9FB2 "
         android:gravity="center"
         android:orientation="vertical"
 
@@ -48,7 +48,7 @@
         android:layout_width="400dp"
         android:layout_height="300dp"
         android:layout_gravity="center"
-        android:background="#90EE90"
+        android:background="#87BFFF"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"

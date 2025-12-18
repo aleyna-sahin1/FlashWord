@@ -35,6 +35,7 @@ public class StatisticsActivity extends AppCompatActivity {
         database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
 
         loadStatistics();
+
     }
     private void loadStatistics() {
 
