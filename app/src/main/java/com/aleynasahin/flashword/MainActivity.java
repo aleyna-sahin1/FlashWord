@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     new Object[]{ currentWordId }
             );
         }
+        binding.btnCheck.setEnabled(false);
 
     }
     private void showRandomWord() {
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
     public void nextWord(View view) {
         showRandomWord();
         binding.editTextAnswer.setText("");
+        binding.btnCheck.setEnabled(true);
     }
 
 
