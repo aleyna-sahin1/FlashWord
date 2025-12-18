@@ -78,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         binding.btnCheck.setOnTouchListener(new PressAnimListener(this));
     }
     public void check(View view) {
+        if (binding.editTextAnswer.getText().toString().isEmpty()) {
+            Toast.makeText(this, "Please enter an answer", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String userAnswer = binding.editTextAnswer.getText().toString().trim();
         String correctAnswer = binding.meaningTextView.getText().toString().trim();
@@ -88,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
             database.execSQL("UPDATE words SET correct_count = correct_count + 1 WHERE id = ?",
                     new Object[]{ currentWordId }
             );
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                nextWord(null);
+            }, 0);
 
         } else {
             Toast.makeText(this, "Wrong!", Toast.LENGTH_LONG).show();
