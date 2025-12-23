@@ -131,6 +131,14 @@
             android:layout_height="wrap_content"
             android:text="loading..."
             android:paddingTop="8dp" />
+        <GridLayout
+            android:id="@+id/gridHardWords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:paddingTop="12dp"
+            android:alignmentMode="alignMargins"
+            android:useDefaultMargins="true" />
 
     </LinearLayout>
 
