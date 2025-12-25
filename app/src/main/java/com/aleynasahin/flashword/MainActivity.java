@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         String userAnswer = binding.editTextAnswer.getText().toString().trim();
         String correctAnswer = binding.meaningTextView.getText().toString().trim();
-        if (userAnswer.equals(correctAnswer)) {
+        if (userAnswer.equalsIgnoreCase(correctAnswer)) {
 
             Toast.makeText(this, "Correct!", Toast.LENGTH_LONG).show();
 
@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                     new Object[]{ currentWordId }
             );
 
-            // Kartın zıplama / scale animasyonu
             binding.cardFront.animate()
                     .scaleX(1.1f)
                     .scaleY(1.1f)
@@ -121,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             wrongTryCount++;
             Toast.makeText(this, "Wrong!", Toast.LENGTH_LONG).show();
 
-            // ❗ sadece ilk yanlışta DB'ye yaz
             if (!wrongCountWritten) {
                 database.execSQL(
                         "UPDATE words SET wrong_count = wrong_count + 1 WHERE id = ?",
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void showRandomWord() {
-        // 🔴 KELİME DEĞİŞTİ = STATE RESET
+
         wrongTryCount = 0;
         wrongCountWritten = false;
         try {
@@ -230,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void shakeCard() {
-        // rotation: daha küçük açılar, daha fazla adım, daha smooth
         ObjectAnimator animatorFront = ObjectAnimator.ofFloat(
                 binding.cardFront,
                 "rotation",
@@ -240,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
         animatorFront.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
         animatorFront.start();
 
-        //Arka yuzu de aynı şekilde açılıyor
         ObjectAnimator animatorBack = ObjectAnimator.ofFloat(
                 binding.cardBack,
                 "rotation",
