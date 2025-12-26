@@ -115,7 +115,7 @@ public class StatisticsActivity extends AppCompatActivity {
             params.setMargins(16, 16, 16, 16);
             card.setLayoutParams(params);
 
-            // 🔹 ÜST BOŞLUK (ORTALAMA İÇİN)
+
             View spacerTop = new View(this);
             spacerTop.setLayoutParams(
                     new LinearLayout.LayoutParams(
@@ -125,7 +125,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     )
             );
 
-            // Kelime
+
             TextView tvWord = new TextView(this);
             tvWord.setText(word);
             tvWord.setTextSize(16f);
@@ -133,14 +133,14 @@ public class StatisticsActivity extends AppCompatActivity {
             tvWord.setGravity(Gravity.CENTER);
             tvWord.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-            // Wrong
+
             TextView tvWrong = new TextView(this);
             tvWrong.setText(wrong + " wrong");
             tvWrong.setTextSize(14f);
             tvWrong.setGravity(Gravity.CENTER);
             tvWrong.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-            // 🔹 ALT BOŞLUK
+
             View spacerBottom = new View(this);
             spacerBottom.setLayoutParams(
                     new LinearLayout.LayoutParams(

@@ -125,12 +125,6 @@
             android:textStyle="bold"
             android:paddingTop="24dp" />
 
-        <TextView
-            android:id="@+id/tvHardWords"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="loading..."
-            android:paddingTop="8dp" />
         <GridLayout
             android:id="@+id/gridHardWords"
             android:layout_width="match_parent"

@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void check(View view) {
         if (binding.editTextAnswer.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Please enter an answer", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter an answer", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                                 .scaleY(1f)
                                 .setDuration(150)
                                 .withEndAction(() -> {
-                                    nextWord(null);        // Sadece burada kelime değişecek
+                                    nextWord(null);
 
                                 })
                                 .start();
