@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FlashWord</string>
+    <string name="update">Update</string>
+    <string name="meaning">Meaning</string>
+    <string name="word">Word</string>
+    <string name="wordl">Word</string>
+    <string name="meaningl">Meaning</string>
 </resources>

@@ -3,25 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:gravity="center_vertical">
 
     <EditText
         android:id="@+id/etWord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Word" />
+        android:hint="@string/word" />
 
     <EditText
         android:id="@+id/etMeaning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Meaning"
+        android:hint="@string/meaning"
         android:layout_marginTop="12dp"/>
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update"
+        android:text="@string/update"
         android:layout_marginTop="24dp"/>
 </LinearLayout>

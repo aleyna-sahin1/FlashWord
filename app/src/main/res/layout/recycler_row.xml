@@ -13,7 +13,7 @@
         android:id="@+id/tvWord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Word"
+        android:text="@string/wordl"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#000"/>
@@ -22,7 +22,7 @@
         android:id="@+id/tvMeaning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Meaning"
+        android:text="@string/meaningl"
         android:textSize="14sp"
         android:textColor="#666"/>
 
