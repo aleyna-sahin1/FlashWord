@@ -8,13 +8,17 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.aleynasahin.flashword.databinding.ActivityWordListBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -53,9 +57,64 @@ public class WordList extends AppCompatActivity {
         getData();
 
 
+        ItemTouchHelper.SimpleCallback simpleCallback =
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+                        int position = viewHolder.getBindingAdapterPosition();
+                        Word deletedWord = wordArrayList.get(position);
+
+                        // 🔹 Listeden geçici sil
+                        wordArrayList.remove(position);
+                        adapter.notifyItemRemoved(position);
+
+                        // 🔹 UNDO
+                        Snackbar.make(binding.recyclerView,
+                                        "Word deleted",
+                                        Snackbar.LENGTH_LONG)
+                                .setAction("UNDO", v -> {
+
+                                    wordArrayList.add(position, deletedWord);
+                                    adapter.notifyItemInserted(position);
+
+                                })
+                                .addCallback(new Snackbar.Callback() {
+                                    @Override
+                                    public void onDismissed(Snackbar snackbar, int event) {
+
+                                        // UNDO yapılmadıysa → DB'den kalıcı sil
+                                        if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                                            deleteWordFromDatabase(deletedWord.id_);
+                                        }
+                                    }
+                                })
+                                .show();
+                    }
+                };
+
+        new ItemTouchHelper(simpleCallback)
+                .attachToRecyclerView(binding.recyclerView);
+
 
 
     }
+    private void deleteWordFromDatabase(int wordId) {
+        database.execSQL(
+                "DELETE FROM words WHERE id = ?",
+                new String[]{ String.valueOf(wordId) }
+        );
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private void getData(){
         Cursor cursor=database.rawQuery("SELECT * FROM words",null);
