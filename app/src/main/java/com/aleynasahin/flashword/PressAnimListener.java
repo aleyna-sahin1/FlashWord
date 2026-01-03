@@ -6,12 +6,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-public class PressAnimListener implements View.OnTouchListener{
+public class PressAnimListener implements View.OnTouchListener {
 
     private final Animation scaleUp;
     private final Animation scaleDown;
 
-    // Constructor: context ile animasyonları yüklüyoruz
+
     public PressAnimListener(Context context) {
         scaleUp = AnimationUtils.loadAnimation(context, R.anim.scale_up);
         scaleDown = AnimationUtils.loadAnimation(context, R.anim.scale_down);
@@ -28,6 +28,6 @@ public class PressAnimListener implements View.OnTouchListener{
                 v.startAnimation(scaleDown);
                 break;
         }
-        return false; // buton click olayını da çalıştırmak için false
+        return false;
     }
 }

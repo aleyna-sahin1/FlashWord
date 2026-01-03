@@ -34,8 +34,8 @@ public class WordList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding=ActivityWordListBinding.inflate(getLayoutInflater());
-        View view=binding.getRoot();
+        binding = ActivityWordListBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
         setContentView(view);
 
 
@@ -45,13 +45,13 @@ public class WordList extends AppCompatActivity {
             return insets;
         });
 
-        wordArrayList=new ArrayList<>();
+        wordArrayList = new ArrayList<>();
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter=new WordAdapter(wordArrayList);
+        adapter = new WordAdapter(wordArrayList);
         binding.recyclerView.setAdapter(adapter);
 
-        database=this.openOrCreateDatabase("Words",MODE_PRIVATE,null);
+        database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
         database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR)");
 
         getData();
@@ -106,45 +106,59 @@ public class WordList extends AppCompatActivity {
                 .attachToRecyclerView(binding.recyclerView);
 
 
-
     }
+
     private void deleteWordFromDatabase(int wordId) {
         database.execSQL(
                 "DELETE FROM words WHERE id = ?",
-                new String[]{ String.valueOf(wordId) }
+                new String[]{String.valueOf(wordId)}
         );
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void getData(){
-        Cursor cursor=database.rawQuery("SELECT * FROM words",null);
+    private void getData() {
+        Cursor cursor = database.rawQuery("SELECT * FROM words", null);
 
-        int idIndex=cursor.getColumnIndex("id");
-        int wordIndex=cursor.getColumnIndex("word");
-        int meaningIndex=cursor.getColumnIndex("meaning");
+        int idIndex = cursor.getColumnIndex("id");
+        int wordIndex = cursor.getColumnIndex("word");
+        int meaningIndex = cursor.getColumnIndex("meaning");
 
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
 
-            int id=cursor.getInt(idIndex);
-            String word=cursor.getString(wordIndex).trim();
-            String meaning=cursor.getString(meaningIndex).trim();
+            int id = cursor.getInt(idIndex);
+            String word = cursor.getString(wordIndex).trim();
+            String meaning = cursor.getString(meaningIndex).trim();
 
-            Word word1=new Word(id,word,meaning);
+            Word word1 = new Word(id, word, meaning);
             wordArrayList.add(word1);
 
         }
 
-        adapter.notifyDataSetChanged();
         cursor.close();
+        adapter.notifyDataSetChanged();
 
+
+        updateEmptyState();
 
     }
+
+    private void updateEmptyState() {
+        if (wordArrayList.isEmpty()) {
+            binding.recyclerView.setVisibility(View.GONE);
+            binding.layoutEmpty.setVisibility(View.VISIBLE);
+        } else {
+            binding.recyclerView.setVisibility(View.VISIBLE);
+            binding.layoutEmpty.setVisibility(View.GONE);
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void clear(View view) {
         database.execSQL("DELETE FROM words");
         wordArrayList.clear();
         adapter.notifyDataSetChanged();
-        Toast.makeText(this,"All Words Deleted",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "All Words Deleted", Toast.LENGTH_SHORT).show();
+        updateEmptyState();
 
     }
 }

@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     boolean wrongCountWritten = false;
 
 
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         binding.btnNext.setOnTouchListener(new PressAnimListener(this));
         binding.btnCheck.setOnTouchListener(new PressAnimListener(this));
     }
+
     public void check(View view) {
         if (binding.editTextAnswer.getText().toString().isEmpty()) {
             Toast.makeText(this, "Please enter an answer", Toast.LENGTH_LONG).show();
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Correct!", Toast.LENGTH_LONG).show();
 
             database.execSQL("UPDATE words SET correct_count = correct_count + 1 WHERE id = ?",
-                    new Object[]{ currentWordId }
+                    new Object[]{currentWordId}
             );
 
             binding.cardFront.animate()
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             if (!wrongCountWritten) {
                 database.execSQL(
                         "UPDATE words SET wrong_count = wrong_count + 1 WHERE id = ?",
-                        new Object[]{ currentWordId }
+                        new Object[]{currentWordId}
                 );
                 wrongCountWritten = true;
             }
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         binding.editTextAnswer.setText("");
 
     }
+
     private void showRandomWord() {
 
         wrongTryCount = 0;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             Cursor cursor = database.rawQuery(
                     "SELECT id, word, meaning FROM words WHERE id != ? ORDER BY RANDOM() LIMIT 1",
-                    new String[]{ String.valueOf(lastWordId) }
+                    new String[]{String.valueOf(lastWordId)}
             );
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
@@ -176,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
     }
+
     public void nextWord(View view) {
         showRandomWord();
         binding.editTextAnswer.setText("");
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.item_word_list) {
             Intent intent = new Intent(this, WordList.class);
             startActivity(intent);
-        }else if (item.getItemId() == R.id.item_statistics) {
+        } else if (item.getItemId() == R.id.item_statistics) {
             startActivity(new Intent(this, StatisticsActivity.class));
         }
 
@@ -233,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 "rotation",
                 0f, -10f, 8f, -6f, 4f, -2f, 2f, 0f
         );
-        animatorFront.setDuration(800); // tam ortası: ne hızlı ne yavaş
+        animatorFront.setDuration(800);
         animatorFront.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
         animatorFront.start();
 

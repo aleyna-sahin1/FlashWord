@@ -39,7 +39,7 @@ public class EditWordActivity extends AppCompatActivity {
                     new Object[]{newWord, newMeaning, wordId}
             );
 
-            finish(); // activity kapanır
+            finish();
             Toast.makeText(this, "Word updated", Toast.LENGTH_LONG).show();
 
         });

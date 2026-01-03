@@ -27,8 +27,8 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding=ActivityStatisticsBinding.inflate(getLayoutInflater());
-        View view=binding.getRoot();
+        binding = ActivityStatisticsBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
         setContentView(view);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -43,6 +43,7 @@ public class StatisticsActivity extends AppCompatActivity {
         loadHardWords();
 
     }
+
     private void loadStatistics() {
 
         Cursor cursor = database.rawQuery(
@@ -86,6 +87,7 @@ public class StatisticsActivity extends AppCompatActivity {
                             android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
+
     private void loadHardWords() {
 
         binding.gridHardWords.removeAllViews();

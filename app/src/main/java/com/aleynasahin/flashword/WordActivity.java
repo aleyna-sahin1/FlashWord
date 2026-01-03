@@ -30,7 +30,7 @@ public class WordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding=ActivityWordBinding.inflate(getLayoutInflater());
+        binding = ActivityWordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -39,7 +39,7 @@ public class WordActivity extends AppCompatActivity {
             return insets;
         });
 
-        wordArrayList=new ArrayList<>();
+        wordArrayList = new ArrayList<>();
 
         binding.cardFront2.setOnClickListener(v -> {
             flipCard();
@@ -49,16 +49,16 @@ public class WordActivity extends AppCompatActivity {
             flipCard();
 
         });
-        database=this.openOrCreateDatabase("Words",MODE_PRIVATE,null);
+        database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
         database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR)");
-        PressAnimListener listener = new PressAnimListener(this); // this = Activity context
+        PressAnimListener listener = new PressAnimListener(this);
         binding.btnSave.setOnTouchListener(listener);
 
     }
 
-    public void save(View view){
-        String word=binding.editTextAddWord.getText().toString().trim();
-        String meaning=binding.editTextAddMeaning.getText().toString().trim();
+    public void save(View view) {
+        String word = binding.editTextAddWord.getText().toString().trim();
+        String meaning = binding.editTextAddMeaning.getText().toString().trim();
 
         if (word.isEmpty()) {
             binding.editTextAddWord.setError("Please enter a word");
@@ -70,11 +70,11 @@ public class WordActivity extends AppCompatActivity {
         }
 
 
-        try{
-            String sql="INSERT INTO words (word,meaning) VALUES (?,?)";
-            SQLiteStatement statement=database.compileStatement(sql);
-            statement.bindString(1,word);
-            statement.bindString(2,meaning);
+        try {
+            String sql = "INSERT INTO words (word,meaning) VALUES (?,?)";
+            SQLiteStatement statement = database.compileStatement(sql);
+            statement.bindString(1, word);
+            statement.bindString(2, meaning);
             statement.execute();
 
         } catch (Exception e) {
@@ -84,12 +84,13 @@ public class WordActivity extends AppCompatActivity {
         binding.editTextAddWord.setText("");
         binding.editTextAddMeaning.setText("");
 
-        Toast.makeText(this,"Word Added",Toast.LENGTH_SHORT).show();
-        if(!isFrontVisible){
+        Toast.makeText(this, "Word Added", Toast.LENGTH_SHORT).show();
+        if (!isFrontVisible) {
             flipCard();
         }
 
     }
+
     private void flipCard() {
         if (isFrontVisible) {
             animateCard(binding.cardFront2, binding.cardBack2);

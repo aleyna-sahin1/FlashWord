@@ -25,7 +25,7 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordHolder> {
     @Override
     public WordHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        RecyclerRowBinding recyclerRowBinding=RecyclerRowBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
+        RecyclerRowBinding recyclerRowBinding = RecyclerRowBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new WordHolder(recyclerRowBinding);
     }
 
@@ -83,12 +83,13 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordHolder> {
         return wordArrayList.size();
     }
 
-    public class WordHolder extends RecyclerView.ViewHolder{
+    public class WordHolder extends RecyclerView.ViewHolder {
 
         private RecyclerRowBinding binding;
+
         public WordHolder(RecyclerRowBinding binding) {
             super(binding.getRoot());
-            this.binding=binding;
+            this.binding = binding;
 
         }
     }

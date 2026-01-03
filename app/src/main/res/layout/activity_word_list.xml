@@ -16,6 +16,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.213" />
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📭"
+            android:textSize="48sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No words yet"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add your first word to start learning"
+            android:textSize="14sp"
+            android:textColor="#777"
+            android:paddingTop="4dp" />
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/btnClear"
