@@ -74,11 +74,9 @@ public class WordList extends AppCompatActivity {
                         int position = viewHolder.getBindingAdapterPosition();
                         Word deletedWord = wordArrayList.get(position);
 
-                        // 🔹 Listeden geçici sil
                         wordArrayList.remove(position);
                         adapter.notifyItemRemoved(position);
 
-                        // 🔹 UNDO
                         Snackbar.make(binding.recyclerView,
                                         "Word deleted",
                                         Snackbar.LENGTH_LONG)
@@ -92,7 +90,6 @@ public class WordList extends AppCompatActivity {
                                     @Override
                                     public void onDismissed(Snackbar snackbar, int event) {
 
-                                        // UNDO yapılmadıysa → DB'den kalıcı sil
                                         if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
                                             deleteWordFromDatabase(deletedWord.id_);
                                         }
@@ -146,9 +143,11 @@ public class WordList extends AppCompatActivity {
         if (wordArrayList.isEmpty()) {
             binding.recyclerView.setVisibility(View.GONE);
             binding.layoutEmpty.setVisibility(View.VISIBLE);
+            binding.btnClear.setVisibility(View.GONE);
         } else {
             binding.recyclerView.setVisibility(View.VISIBLE);
             binding.layoutEmpty.setVisibility(View.GONE);
+            binding.btnClear.setVisibility(View.VISIBLE);
         }
     }
 
