@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PopupMenuNeutral" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:popupBackground">@drawable/popup_bg_neutral</item>
+        <item name="android:textColor">#111827</item>
+    </style>
+
+</resources>

@@ -5,8 +5,11 @@
         android:id="@+id/action_edit"
         android:title="Edit" />
 
+
     <item
         android:id="@+id/action_delete"
-        android:title="Delete" />
+        android:title="Delete"
+        android:titleTextColor="#374151"/>
+
 
 </menu>

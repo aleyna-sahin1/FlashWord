@@ -38,9 +38,18 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordHolder> {
 
         holder.itemView.setOnLongClickListener(view -> {
 
-            PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
-            popupMenu.getMenuInflater()
-                    .inflate(R.menu.word_item_menu, popupMenu.getMenu());
+
+            PopupMenu popupMenu = new PopupMenu(
+                    holder.itemView.getContext(),
+                    holder.itemView,
+                    0,
+                    0,
+                    R.style.PopupMenuNeutral
+            );
+
+            popupMenu.inflate(R.menu.word_item_menu);
+            popupMenu.show();
+
 
             popupMenu.setOnMenuItemClickListener(menuItem -> {
 
