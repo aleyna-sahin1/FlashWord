@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:gravity="center_horizontal">
+    android:gravity="center">
 
     <EditText
         android:id="@+id/etWord"
@@ -23,12 +23,12 @@
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="@string/update"
-        android:textAllCaps="false"
-        android:textSize="14sp"
-        android:textColor="#111827"
+        android:layout_marginTop="24dp"
         android:background="@drawable/btn_neutral"
         android:elevation="2dp"
-        android:layout_marginTop="24dp"/>
+        android:text="@string/update"
+        android:textAllCaps="false"
+        android:textColor="#111827"
+        android:textSize="14sp" />
 
 </LinearLayout>

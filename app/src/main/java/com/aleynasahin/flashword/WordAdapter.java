@@ -37,6 +37,19 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.WordHolder> {
         holder.binding.tvMeaning.setText(wordArrayList.get(position).meaning_);
 
         holder.itemView.setOnLongClickListener(view -> {
+            view.animate()
+                    .scaleX(0.97f)
+                    .scaleY(0.97f)
+                    .setDuration(100)
+                    .withEndAction(() -> {
+                        view.animate()
+                                .scaleX(1f)
+                                .scaleY(1f)
+                                .setDuration(100)
+                                .start();
+                    })
+                    .start();
+
 
 
             PopupMenu popupMenu = new PopupMenu(
