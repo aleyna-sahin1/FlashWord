@@ -8,13 +8,55 @@
     android:layout_height="match_parent"
     tools:context=".StatisticsActivity">
 
-    <LinearLayout
 
+    <LinearLayout
+        android:id="@+id/layoutEmptyState"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:background="#F5F5F5">
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📊"
+            android:textSize="48sp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No statistics yet"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#333"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your progress will appear here once you start practicing."
+            android:textSize="15sp"
+            android:textColor="#666"
+            android:gravity="center"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/layoutStatistics"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Title -->
         <TextView

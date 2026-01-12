@@ -18,11 +18,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.aleynasahin.flashword.databinding.ActivityStatisticsBinding;
 
+import java.util.ArrayList;
+
 public class StatisticsActivity extends AppCompatActivity {
 
     private ActivityStatisticsBinding binding;
     SQLiteDatabase database;
 
+    ArrayList<Word> wordArrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,13 +39,35 @@ public class StatisticsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        wordArrayList=new ArrayList<>();
 
         database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
-
+        checkStatisticsState();
         loadStatistics();
         loadHardWords();
 
+
     }
+    private void checkStatisticsState() {
+
+        Cursor cursor = database.rawQuery(
+                "SELECT COUNT(*) FROM words",
+                null
+        );
+
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+
+        if (count == 0) {
+            binding.layoutEmptyState.setVisibility(View.VISIBLE);
+            binding.layoutStatistics.setVisibility(View.GONE);
+        } else {
+            binding.layoutEmptyState.setVisibility(View.GONE);
+            binding.layoutStatistics.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void loadStatistics() {
 
@@ -63,7 +88,7 @@ public class StatisticsActivity extends AppCompatActivity {
         int total = correct + wrong;
         int rate = total == 0 ? 0 : (correct * 100 / total);
 
-        // UI set
+
         binding.tvCorrectCount.setText(String.valueOf(correct));
         binding.tvWrongCount.setText(String.valueOf(wrong));
         binding.tvRatePercent.setText(rate + "%");
@@ -104,7 +129,7 @@ public class StatisticsActivity extends AppCompatActivity {
             String word = cursor.getString(0);
             int wrong = cursor.getInt(1);
 
-            // Kart
+
             LinearLayout card = new LinearLayout(this);
             card.setOrientation(LinearLayout.VERTICAL);
             card.setPadding(24, 24, 24, 24);
@@ -113,7 +138,7 @@ public class StatisticsActivity extends AppCompatActivity {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            params.height = 260; // 🔥 SABİT YÜKSEKLİK (çok önemli)
+            params.height = 260;
             params.setMargins(16, 16, 16, 16);
             card.setLayoutParams(params);
 
