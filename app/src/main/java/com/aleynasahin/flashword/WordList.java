@@ -1,6 +1,7 @@
 package com.aleynasahin.flashword;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -55,6 +56,10 @@ public class WordList extends AppCompatActivity {
         database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR)");
 
         getData();
+        binding.btnClear.setOnClickListener(v -> {
+            showClearConfirmationDialog();
+        });
+
 
 
         ItemTouchHelper.SimpleCallback simpleCallback =
@@ -104,6 +109,18 @@ public class WordList extends AppCompatActivity {
 
 
     }
+    private void showClearConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Clear all?")
+                .setMessage("All data will be deleted. Are you sure?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    clear();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+
 
     private void deleteWordFromDatabase(int wordId) {
         database.execSQL(
@@ -152,7 +169,7 @@ public class WordList extends AppCompatActivity {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void clear(View view) {
+    public void clear() {
         database.execSQL("DELETE FROM words");
         wordArrayList.clear();
         adapter.notifyDataSetChanged();
