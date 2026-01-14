@@ -43,7 +43,6 @@
 
     </LinearLayout>
 
-    <!-- Kartın Arka Yüzü -->
 
     <LinearLayout
         android:id="@+id/card_back"
@@ -79,6 +78,8 @@
         android:layout_height="49dp"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginStart="4dp"
+
+        android:imeOptions="actionDone"
 
         android:layout_marginTop="468dp"
         android:layout_marginEnd="27dp"

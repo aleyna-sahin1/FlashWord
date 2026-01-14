@@ -1,7 +1,10 @@
 package com.aleynasahin.flashword;
 
+import static com.google.android.material.internal.ViewUtils.hideKeyboard;
+
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +17,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     boolean wrongCountWritten = false;
 
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "RestrictedApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +82,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
         showRandomWord();
-        PressAnimListener listener = new PressAnimListener(this); // this = Activity context
+        PressAnimListener listener = new PressAnimListener(this);
         binding.btnNext.setOnTouchListener(new PressAnimListener(this));
         binding.btnCheck.setOnTouchListener(new PressAnimListener(this));
+
+        binding.editTextAnswer.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideKeyboard(v);
+                v.clearFocus();
+                return true;
+            }
+            return false;
+        });
+
     }
+    private void hideKeyboard(View view) {
+        InputMethodManager imm =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 
     public void check(View view) {
         if (binding.editTextAnswer.getText().toString().isEmpty()) {
