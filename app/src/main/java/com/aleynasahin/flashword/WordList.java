@@ -2,6 +2,7 @@ package com.aleynasahin.flashword;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -44,6 +45,10 @@ public class WordList extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+        binding.btnAddWord.setOnClickListener(v -> {
+            Intent intent = new Intent(WordList.this, WordActivity.class);
+            startActivity(intent);
         });
 
         wordArrayList = new ArrayList<>();
@@ -174,7 +179,23 @@ public class WordList extends AppCompatActivity {
         wordArrayList.clear();
         adapter.notifyDataSetChanged();
         Toast.makeText(this, "All Words Deleted", Toast.LENGTH_SHORT).show();
+
         updateEmptyState();
+        Cursor cursor = database.rawQuery("SELECT * FROM words", null);
+        checkEmptyState(cursor);
+
 
     }
+
+
+    private void checkEmptyState(Cursor cursor) {
+        if (cursor.getCount() == 0) {
+            binding.recyclerView.setVisibility(View.GONE);
+            binding.layoutEmpty.setVisibility(View.VISIBLE);
+        } else {
+            binding.recyclerView.setVisibility(View.VISIBLE);
+            binding.layoutEmpty.setVisibility(View.GONE);
+        }
+    }
+
 }
