@@ -58,7 +58,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -69,7 +68,7 @@
             android:layout_gravity="center"
             android:paddingBottom="24dp" />
 
-        <!-- Correct Card -->
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,7 +130,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Success Rate -->
         <TextView
             android:id="@+id/tvRateLabel"
             android:layout_width="wrap_content"
