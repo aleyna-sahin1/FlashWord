@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.aleynasahin.flashword.databinding.ActivityMainBinding;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -64,6 +66,29 @@ public class MainActivity extends AppCompatActivity {
         });
         database = this.openOrCreateDatabase("Words", MODE_PRIVATE, null);
         database.execSQL("CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY, word VARCHAR, meaning VARCHAR,correct_count INTEGER DEFAULT 0,wrong_count INTEGER DEFAULT 0)");
+        database.execSQL(
+                "CREATE TABLE IF NOT EXISTS user_progress (" +
+                        "id INTEGER PRIMARY KEY, " +
+                        "last_active_date TEXT, " +
+                        "current_streak INTEGER, " +
+                        "longest_streak INTEGER)"
+        );
+
+        database.execSQL(
+                "CREATE TABLE IF NOT EXISTS daily_progress (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "date TEXT UNIQUE, " +
+                        "solved_count INTEGER)"
+        );
+
+
+        database.execSQL(
+                "INSERT OR IGNORE INTO user_progress (id, current_streak, longest_streak) VALUES (1, 0, 0)"
+        );
+        showStreak();
+        showRandomWord();
+
+
         wordArrayList = new ArrayList<>();
         adapter = new WordAdapter(wordArrayList);
         binding.cardFront.setOnClickListener(v -> {
@@ -81,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        showRandomWord();
         PressAnimListener listener = new PressAnimListener(this);
         binding.btnNext.setOnTouchListener(new PressAnimListener(this));
         binding.btnCheck.setOnTouchListener(new PressAnimListener(this));
@@ -96,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     private void hideKeyboard(View view) {
         InputMethodManager imm =
                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -120,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
             database.execSQL("UPDATE words SET correct_count = correct_count + 1 WHERE id = ?",
                     new Object[]{currentWordId}
             );
+            updateDailyProgress();
+            showStreak();
 
             binding.cardFront.animate()
                     .scaleX(1.1f)
@@ -270,6 +297,119 @@ public class MainActivity extends AppCompatActivity {
         animatorBack.setDuration(800);
         animatorBack.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
         animatorBack.start();
+    }
+
+    private void updateDailyProgress() {
+
+        String today;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            today = java.time.LocalDate.now().toString();
+        } else {
+
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            today = sdf.format(java.util.Calendar.getInstance().getTime());
+        }
+
+        Cursor cursor = database.rawQuery(
+                "SELECT solved_count FROM daily_progress WHERE date = ?",
+                new String[]{today}
+        );
+
+        if (cursor.moveToFirst()) {
+            int count = cursor.getInt(0) + 1;
+            database.execSQL(
+                    "UPDATE daily_progress SET solved_count = ? WHERE date = ?",
+                    new Object[]{count, today}
+            );
+        } else {
+            database.execSQL(
+                    "INSERT INTO daily_progress (date, solved_count) VALUES (?, ?)",
+                    new Object[]{today, 1}
+            );
+        }
+        cursor.close();
+
+        updateStreak(today);
+    }
+
+    private void updateStreak(String today) {
+
+        Cursor c = database.rawQuery(
+                "SELECT last_active_date, current_streak, longest_streak FROM user_progress WHERE id = 1",
+                null
+        );
+
+        String lastDate = null;
+        int current = 0;
+        int longest = 0;
+
+        if (c.moveToFirst()) {
+            lastDate = c.getString(0);
+            current = c.getInt(1);
+            longest = c.getInt(2);
+        }
+        c.close();
+
+        if (lastDate == null) {
+            current = 1;
+        } else if (lastDate.equals(today)) {
+            return;
+        } else if (isYesterday(lastDate)) {
+            current++;
+        } else {
+            current = 1;
+        }
+
+        if (current > longest) longest = current;
+
+        database.execSQL(
+                "UPDATE user_progress SET last_active_date = ?, current_streak = ?, longest_streak = ? WHERE id = 1",
+                new Object[]{today, current, longest}
+        );
+    }
+
+    private boolean isYesterday(String date) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            java.time.LocalDate last = java.time.LocalDate.parse(date);
+            return last.plusDays(1).equals(java.time.LocalDate.now());
+        } else {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            try {
+                java.util.Calendar lastCal = java.util.Calendar.getInstance();
+                lastCal.setTime(sdf.parse(date));
+
+                java.util.Calendar todayCal = java.util.Calendar.getInstance();
+                todayCal.add(java.util.Calendar.DAY_OF_YEAR, -1);
+
+                return lastCal.get(java.util.Calendar.YEAR) == todayCal.get(java.util.Calendar.YEAR)
+                        && lastCal.get(java.util.Calendar.DAY_OF_YEAR) == todayCal.get(java.util.Calendar.DAY_OF_YEAR);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+    }
+
+    private void showStreak() {
+        Cursor c = database.rawQuery(
+                "SELECT current_streak, longest_streak FROM user_progress WHERE id = 1",
+                null
+        );
+
+        int current = 0;
+        int longest = 0;
+
+        if (c.moveToFirst()) {
+            current = c.getInt(0);
+            longest = c.getInt(1);
+        }
+        c.close();
+
+        binding.tvCurrentStreak.setText("🔥 " + current + " day streak");
+        binding.tvLongestStreak.setText("Longest: " + longest);
     }
 
 }
