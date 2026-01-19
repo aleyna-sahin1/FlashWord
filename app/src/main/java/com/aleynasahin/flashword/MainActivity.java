@@ -131,8 +131,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void check(View view) {
-        if (binding.editTextAnswer.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Please enter an answer", Toast.LENGTH_LONG).show();
+        String answer = binding.editTextAnswer.getText().toString().trim();
+        if (answer.isEmpty()) {
+            binding.editTextAnswer.setError("Please enter an answer");
             return;
         }
 
