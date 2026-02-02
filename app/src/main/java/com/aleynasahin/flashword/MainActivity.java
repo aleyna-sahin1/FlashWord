@@ -85,7 +85,10 @@ public class MainActivity extends AppCompatActivity {
         database.execSQL(
                 "INSERT OR IGNORE INTO user_progress (id, current_streak, longest_streak) VALUES (1, 0, 0)"
         );
+
+        checkStreakOnAppOpen();
         showStreak();
+
         showRandomWord();
 
 
@@ -120,6 +123,42 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    private void checkStreakOnAppOpen() {
+
+        String today;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            today = LocalDate.now().toString();
+        } else {
+            java.text.SimpleDateFormat sdf =
+                    new java.text.SimpleDateFormat("yyyy-MM-dd");
+            today = sdf.format(
+                    java.util.Calendar.getInstance().getTime()
+            );
+        }
+
+        Cursor c = database.rawQuery(
+                "SELECT last_active_date, current_streak FROM user_progress WHERE id = 1",
+                null
+        );
+
+        if (!c.moveToFirst()) {
+            c.close();
+            return;
+        }
+
+        String lastDate = c.getString(0);
+        c.close();
+
+        if (lastDate == null) return;
+
+        if (!lastDate.equals(today) && !isYesterday(lastDate)) {
+            database.execSQL(
+                    "UPDATE user_progress SET current_streak = 0 WHERE id = 1"
+            );
+        }
+    }
+
 
     private void hideKeyboard(View view) {
         InputMethodManager imm =
