@@ -6,10 +6,10 @@ The app focuses on clean UI, ease of use, and motivation-based learning features
 
 ## Screenshots
 <p align="center">
-<img src="screenshots/mainactivity.jpeg" width="250"/>
-<img src="screenshots/statisticsactivity.jpeg" width="250"/>
-<img src="screenshots/wordactivity.jpeg" width="250"/>
-<img src="screenshots/wordlistactivity.jpeg" width="250"/>
+<img src="screenshots/mainactivity.jpeg" width="200"/>
+<img src="screenshots/statisticsactivity.jpeg" width="200"/>
+<img src="screenshots/wordactivity.jpeg" width="200"/>
+<img src="screenshots/wordlistactivity.jpeg" width="200"/>
 </p>
 
 
