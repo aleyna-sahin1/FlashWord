@@ -87,25 +87,21 @@ public class WordList extends AppCompatActivity {
                         wordArrayList.remove(position);
                         adapter.notifyItemRemoved(position);
 
-                        Snackbar.make(binding.recyclerView,
-                                        "Word deleted",
-                                        Snackbar.LENGTH_LONG)
+                        Snackbar.make(binding.main1, "Word deleted", Snackbar.LENGTH_LONG)
                                 .setAction("UNDO", v -> {
-
                                     wordArrayList.add(position, deletedWord);
                                     adapter.notifyItemInserted(position);
-
                                 })
                                 .addCallback(new Snackbar.Callback() {
                                     @Override
                                     public void onDismissed(Snackbar snackbar, int event) {
-
                                         if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
                                             deleteWordFromDatabase(deletedWord.id_);
                                         }
                                     }
                                 })
                                 .show();
+
                     }
                 };
 
