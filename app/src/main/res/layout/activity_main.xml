@@ -39,34 +39,43 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/card_front"
         android:layout_width="400dp"
         android:layout_height="300dp"
-        android:layout_gravity="center"
         android:background="#FF9FB2"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:clipChildren="false"
+        android:clipToPadding="false"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.313">
 
         <TextView
             android:id="@+id/wordTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:text="Word"
             android:textColor="#000000"
-            android:textSize="24sp"
+            android:textSize="24sp" />
 
-            />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieFire"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:lottie_rawRes="@raw/fire"
+            app:lottie_loop="false"
+            app:lottie_autoPlay="false" />
 
-    </LinearLayout>
+
+    </FrameLayout>
+
 
 
     <LinearLayout
@@ -149,6 +158,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextAnswer"
         app:layout_constraintVertical_bias="0.41" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

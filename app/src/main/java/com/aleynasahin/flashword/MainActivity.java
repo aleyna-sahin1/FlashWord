@@ -1,7 +1,10 @@
 package com.aleynasahin.flashword;
 
+import static android.view.View.GONE;
 import static com.google.android.material.internal.ViewUtils.hideKeyboard;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,8 +23,10 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -122,7 +127,48 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+
     }
+    private void playStreakAnimation() {
+        binding.lottieFire.bringToFront();
+        binding.lottieFire.setElevation(10f);
+
+        binding.wordTextView.setElevation(0f);
+
+
+        binding.lottieFire.setVisibility(View.VISIBLE);
+
+        binding.lottieFire.setScaleX(0.6f);
+        binding.lottieFire.setScaleY(0.6f);
+        binding.lottieFire.setTranslationY(150f);
+        binding.lottieFire.setAlpha(1f);
+
+
+
+        binding.lottieFire.playAnimation();
+
+        binding.lottieFire.animate()
+                .translationY(-250f)
+                .scaleX(1.5f)
+                .scaleY(1.5f)
+                .alpha(1f)
+                .setDuration(1200)
+                .withEndAction(() -> {
+
+                    binding.lottieFire.cancelAnimation();
+                    binding.lottieFire.setVisibility(View.GONE);
+
+
+
+                    binding.lottieFire.setAlpha(1f);
+                    binding.lottieFire.setTranslationY(0f);
+                    binding.lottieFire.setScaleX(1f);
+                    binding.lottieFire.setScaleY(1f);
+                })
+                .start();
+    }
+
+
     private void checkStreakOnAppOpen() {
 
         String today;
@@ -312,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void animateCard(View visibleView, View hiddenView) {
         visibleView.animate().rotationY(90).setDuration(200).withEndAction(() -> {
-            visibleView.setVisibility(View.GONE);
+            visibleView.setVisibility(GONE);
             hiddenView.setVisibility(View.VISIBLE);
             hiddenView.setRotationY(-90);
             hiddenView.animate().rotationY(0).setDuration(200).start();
@@ -391,6 +437,8 @@ public class MainActivity extends AppCompatActivity {
         }
         c.close();
 
+        int oldCurrent = current;
+
         if (lastDate == null) {
             current = 1;
         } else if (lastDate.equals(today)) {
@@ -401,6 +449,11 @@ public class MainActivity extends AppCompatActivity {
             current = 1;
         }
 
+
+        if (current > oldCurrent) {
+            playStreakAnimation();
+        }
+
         if (current > longest) longest = current;
 
         database.execSQL(
@@ -408,6 +461,7 @@ public class MainActivity extends AppCompatActivity {
                 new Object[]{today, current, longest}
         );
     }
+
 
     private boolean isYesterday(String date) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
